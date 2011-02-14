@@ -1,6 +1,6 @@
 #!perl
 # PODNAME: nag
-# ABSTRACT: send yourself a reminder sometime in the future
+# ABSTRACT: send yourself a reminder
 
 eval 'exec /usr/bin/perl  -S $0 ${1+"$@"}'
   if 0;    # (improbably) not running under some shell
@@ -12,7 +12,7 @@ use Gtk2::Notify -init, $0;
 use Getopt::Long::Descriptive qw(describe_options prog_name);
 
 # some icon specs
-use constant PHRASE    => [qw(psst hey Hey! !!!!)];
+use constant PHRASE    => [qw(psst hey HEY !!!)];
 use constant STROKE    => [qw(0000ff 0000ff ff0000 ff0000)];
 use constant FILL      => [qw(ffffff ffffff ffffff ffff00)];
 use constant OPACITY   => [ 0, 1, 1, 1 ];
@@ -23,7 +23,7 @@ my $name = prog_name;
 my ( $opt, $usage ) = describe_options(
     "$name %o <time> <text>+",
     [],
-    ['Send yourself a reminder sometime in the future.'],
+    ['Send yourself a reminder.'],
     [],
     [
         'urgency' => hidden => {
@@ -177,3 +177,38 @@ END
     $fh->close;
     return $filename;
 }
+
+__END__
+
+=head1 SYNOPSIS
+
+  $ nag 2h drink coffee
+  $ nag 20s inhale
+  $ nag 40s exhale
+  
+  $ nag 8am pull on pants
+  $ nag 9 stretch
+  
+  $ nag --nudge 9:00pm go home
+  $ nag --shake 9:30pm brush teeth
+  $ nag --slap 10:00pm go to bed
+  
+  $ nag --help
+  nag [-nps] [long options...] <time> <text>+
+	           
+	Send yourself a reminder.
+	           
+	-n --nudge   low key reminder
+	-p --poke    reminder with no particular urgency (default)
+	-s --shake   urgent reminder
+	--slap       do this!!!
+	           
+	--help       print usage message and exit
+
+=head1 DESCRIPTION
+
+B<nag> is a utility to facilitate invoking C<Gtk2::Notify> to send your future
+self reminders. It causes a notification window with a somewhat eye catching icon
+to appear on your screen, linger a moment, and then fade away.
+
+=cut
