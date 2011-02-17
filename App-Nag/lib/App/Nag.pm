@@ -16,6 +16,14 @@ own risk.
 use Modern::Perl;
 use Getopt::Long::Descriptive qw(describe_options prog_name);
 
+# cache the current moment for efficiency and to
+# facilitate testing
+our $current_moment;
+
+# cache local time zone, again for efficiency and to facilitate
+# testing
+our $tz;
+
 # some icon specs
 use constant PHRASE    => [qw(psst hey HEY !!!)];
 use constant STROKE    => [qw(0000ff 0000ff ff0000 ff0000)];
@@ -96,8 +104,7 @@ sub validate_time {
             pre_text => "ERROR: could not understand time expression: $time\n\n"
         }
     ) unless my %props = _parse_time($time);
-    my $tz = DateTime::TimeZone->new( name => 'local' );
-    my $now = DateTime->now( time_zone => $tz );
+    my $now  = _now();
     my $then = $now->clone;
 
     if ( $props{unit} ) {
@@ -229,6 +236,18 @@ END
     print $fh $text;
     $fh->close;
     return $filename;
+}
+
+# fetch a clone of the current moment
+sub _now {
+    $current_moment //= DateTime->now( time_zone => _tz() );
+    return $current_moment->clone;
+}
+
+# fetch the current time zone
+sub _tz {
+    $tz //= DateTime::TimeZone->new( name => 'local' );
+    return $tz;
 }
 
 1;
