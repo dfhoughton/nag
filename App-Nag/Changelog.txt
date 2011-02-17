@@ -1,3 +1,5 @@
+Improved testing rig so testing doesn't in effect cannibalize the code it is supposed to be independent of.
+
 0.002 Tue, Feb 15, 2011
 
 First release.
